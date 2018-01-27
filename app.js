@@ -12,6 +12,7 @@ const MongoStore = require('connect-mongo')(session);
 const { url, db, port } = require('./config');
 
 mongoose.connect(`mongodb://${url}:${port}/${db}`, { useMongoClient: true });
+mongoose.Promise = global.Promise;
 
 const auth = require('./routes/auth');
 const index = require('./routes/index');
