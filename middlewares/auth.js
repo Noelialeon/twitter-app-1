@@ -1,4 +1,4 @@
-module.exports = redirect => (req, res, next) => {
+exports.redirect = redirect => (req, res, next) => {
   if (req.session.currentUser) {
     next();
   } else {

@@ -27,7 +27,7 @@ app.set('view engine', 'ejs');
 app.set('layout', 'layouts/main');
 app.use(session({
   secret: 'ironhack',
-  cookie: { maxAge: 360000 },
+  cookie: { maxAge: 3600000 },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 24 * 60 * 60, // 1 day
