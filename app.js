@@ -16,7 +16,7 @@ mongoose.Promise = global.Promise;
 
 const auth = require('./routes/auth');
 const index = require('./routes/index');
-const users = require('./routes/users');
+const tweets = require('./routes/tweets');
 
 const app = express();
 
@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', auth);
 app.use('/', index);
-app.use('/users', users);
+app.use('/tweets', tweets);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

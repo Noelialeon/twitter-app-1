@@ -1,3 +1,15 @@
 <h1>Profile</h1>
 <p>Welcome <%= username %></p>
 <a href="/logout">logout</a>
+<p>
+  <a href="/tweets/new">Create tweet</a>
+</p>
+
+<ul>
+    <% tweets.forEach((tweet) => { %>
+      <li>
+        <%= tweet.tweet %>
+        <p class="date"><%= moment(tweet.created_at).format("LL, LTS") %></p>
+      </li>
+    <%  }) %>
+  </ul>

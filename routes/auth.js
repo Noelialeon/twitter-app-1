@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 
 const User = require('../models/user');
+const authMiddleware = require('../middlewares/auth');
+const noAuthMiddleware = require('../middlewares/noauth');
+
 
 /* GET home page. */
 router.get('/signup', (req, res, next) => {
@@ -47,13 +50,12 @@ router.post('/signup', (req, res, next) => {
   }
 });
 
-router.get('/login', (req, res, next) => {
+router.get('/login', noAuthMiddleware('/profile'), (req, res, next) => {
   res.render('auth/login');
 });
 
 router.post('/login', (req, res, next) => {
   const { username, password } = req.body;
-
   if (username === '' || password === '') {
     const error = 'Usuario y password no pueden estar vacios';
     res.render('auth/login', { error });
@@ -64,7 +66,7 @@ router.post('/login', (req, res, next) => {
           const error = 'usuario y password incorrectos';
           res.render('auth/login', { error });
         } else if (bcrypt.compareSync(password, user.password)) {
-          req.session.currentUser = user._id;
+          req.session.currentUser = user;
           res.redirect('/profile');
         } else {
           const error = 'usuario y password incorrectos';

@@ -1,2 +1,16 @@
 <h1><%= title %></h1>
 <p>Welcome to <%= title %></p>
+
+<div id="container">
+  <a href="/tweets/new">New tweet</a>
+  <a href="/logout">Logout</a>
+
+  <h2>@<%= username %> tweets</h2>
+
+  <% tweets.forEach(function(tweet) { %>
+    <div class="tweet-container">
+      <p><%= tweet.tweet %></p>
+      <p class="date"><%= moment(tweet.created_at).format("LL, LTS") %></p>
+    </div>
+  <% }) %>
+</div>
