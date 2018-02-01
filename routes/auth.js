@@ -14,7 +14,7 @@ router.get('/signup', (req, res, next) => {
 });
 
 router.post('/signup', (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, privacy } = req.body;
 
   if (username === '' || password === '') {
     const error = 'Usuario y password no pueden estar vacios';
@@ -29,11 +29,12 @@ router.post('/signup', (req, res, next) => {
           const newUser = {
             username,
             password: hashPass,
+            privacy,
           };
 
           User.create(newUser)
             .then((doc) => {
-              res.redirect('/');
+              res.redirect('/profile');
             })
             .catch((err) => {
               const error = 'Problema al crear el usuario';

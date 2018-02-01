@@ -17,7 +17,7 @@ mongoose.Promise = global.Promise;
 const auth = require('./routes/auth');
 const index = require('./routes/index');
 const tweets = require('./routes/tweets');
-
+const timelineController = require('./routes/timelineController');
 const app = express();
 
 // view engine setup
@@ -45,6 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', auth);
 app.use('/', index);
 app.use('/tweets', tweets);
+app.use('/timeline', timelineController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

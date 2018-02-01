@@ -8,6 +8,13 @@
   <label for="password">Password</label>
   <input type="password" name="password" placeholder="Your password">
   <br>
+  <br>
+  <label for="privacy" name='privacy'>Do you want to have a private profile?</label>
+  <select>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+  </select>
+  <br>
   <% if ( typeof(error) != "undefined") { %>
     <div class="alert alert-danger" role="alert">
       <%= error %>

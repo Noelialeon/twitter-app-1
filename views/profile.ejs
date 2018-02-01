@@ -1,15 +1,28 @@
-<h1>Profile</h1>
-<p>Welcome <%= username %></p>
-<a href="/logout">logout</a>
+<div id="profile">
+    <h2>Welcome @<%= username %></h2>
+  </div>
+  
+<p>
+  <a href="/timeline">Check timeline</a>
+</p>
+
+<div id="container">
+  <% if (tweets.length > 0) { %>
+    <% tweets.forEach(function(tweet) { %>
+      <div class="tweet-container">
+        <p><%= tweet.tweet %></p>
+        <p class="date"><%= moment(tweet.created_at).format("LL, LTS") %></p>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="tweet-container no-tweets">
+      <p>@<%= username %> hasn't tweeted yet.</p>
+    </div>
+  <% } %>
+</div>
 <p>
   <a href="/tweets/new">Create tweet</a>
 </p>
-
-<ul>
-    <% tweets.forEach((tweet) => { %>
-      <li>
-        <%= tweet.tweet %>
-        <p class="date"><%= moment(tweet.created_at).format("LL, LTS") %></p>
-      </li>
-    <%  }) %>
-  </ul>
+<p>
+  <a href="/logout">Logout</a>
+</p>
