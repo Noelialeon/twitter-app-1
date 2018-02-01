@@ -20,6 +20,13 @@
     </div>
   <% } %>
 </div>
+<br>
+<% if ( typeof(error) != "undefined") { %>
+  <div class="alert alert-danger" role="alert">
+    <%= error %>
+  </div>
+  <% } %>
+  <br>
 <p>
   <a href="/tweets/new">Create tweet</a>
 </p>

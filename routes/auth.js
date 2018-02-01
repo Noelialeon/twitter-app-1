@@ -15,7 +15,7 @@ router.get('/signup', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
   const { username, password, privacy } = req.body;
-
+  console.log(req.body);
   if (username === '' || password === '') {
     const error = 'Usuario y password no pueden estar vacios';
     res.render('auth/signup', { error });

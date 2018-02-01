@@ -6,6 +6,8 @@ const User = require('../models/user');
 const Tweet = require('../models/tweet');
 
 const authMiddleware = require('../middlewares/auth');
+const privacyMiddleware = require('../middlewares/privacy');
+
 /* GET home page. */
 router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });
@@ -13,7 +15,6 @@ router.get('/', (req, res, next) => {
 
 router.get('/profile', authMiddleware('/login'), (req, res, next) => {
   const { _id, username, privacy } = req.session.currentUser;
-  console.log(privacy);
   Tweet.find({ user_id: _id })
     .populate('user_id')
     .exec((err, tweets) => {
@@ -25,7 +26,7 @@ router.get('/profile', authMiddleware('/login'), (req, res, next) => {
     });
 });
 
-router.get('/profile/:username', (req, res, next) => {
+router.get('/profile/:username', privacyMiddleware('/profile'), (req, res, next) => {
   User
     .findOne({ username: req.params.username }, '_id username')
     .exec((err, user) => {
