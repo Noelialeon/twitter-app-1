@@ -5,7 +5,7 @@ const userSchema = new Schema({
   username: String,
   password: String,
   privacy: Boolean,
-  following: [{ type: Schema.Types.ObjectId, ref: 'User'}],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });

@@ -37,9 +37,9 @@ router.get('/profile/:username', privacyMiddleware('/profile'), (req, res, next)
       const isFollowing = req.session.currentUser.following.indexOf(user._id.toString()) > -1;
       Tweet.find({ user_name: user.username }, 'tweet created_at')
         .sort({ created_at: -1 })
-        .exec((err, tweets, currentUser) => {
+        .exec((err, tweets) => {
           res.render('otherProfile', {
-            username: user.username,
+            username: req.params.username,
             tweets,
             moment,
             session: req.session.currentUser,
@@ -49,9 +49,10 @@ router.get('/profile/:username', privacyMiddleware('/profile'), (req, res, next)
     });
 });
 
-router.post('/profile/:username/follow', (req, res, next) => {
+router.post('/profile/:username/follow', authMiddleware('/login'), (req, res, next) => {
   User
-    .findOne({ username: req.params.username }, '_id').exec((err, follow) => {
+    .findOne({ username: req.params.username }, '_id')
+    .exec((err, follow) => {
       if (err) {
         res.redirect(`/profile/${req.params.username}`);
         return;
@@ -65,8 +66,8 @@ router.post('/profile/:username/follow', (req, res, next) => {
             currentUser.following.splice(followingIndex, 1);
           } else {
             currentUser.following.push(follow._id);
-            console.log('this should not be -1:', followingIndex, ',because', currentUser.following[0], 'is equal to', follow._id);
           }
+          console.log('this should not be -1:', followingIndex, ',because', currentUser.following[0], 'is equal to', follow._id);
 
           currentUser.save((err) => {
             req.session.currentUser = currentUser;
