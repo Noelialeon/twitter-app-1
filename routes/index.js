@@ -21,24 +21,56 @@ router.get('/profile', authMiddleware('/login'), (req, res, next) => {
       if (err) {
         next(err);
       } else {
-        res.render('profile', { username, tweets, moment });
+        res.render('profile', { username, tweets, moment, err });
       }
     });
 });
+
 
 router.get('/profile/:username', privacyMiddleware('/profile'), (req, res, next) => {
   User
     .findOne({ username: req.params.username }, '_id username')
     .exec((err, user) => {
-      if (!user) { next(err); }
-
+      if (!user) {
+        next(err);
+      }
+      const isFollowing = req.session.currentUser.following.indexOf(user._id.toString()) > -1;
       Tweet.find({ user_name: user.username }, 'tweet created_at')
         .sort({ created_at: -1 })
-        .exec((err, tweets) => {
-          res.render('profile', {
+        .exec((err, tweets, currentUser) => {
+          res.render('otherProfile', {
             username: user.username,
             tweets,
             moment,
+            session: req.session.currentUser,
+            button_text: isFollowing ? 'Unfollow' : 'Follow',
+          });
+        });
+    });
+});
+
+router.post('/profile/:username/follow', (req, res, next) => {
+  User
+    .findOne({ username: req.params.username }, '_id').exec((err, follow) => {
+      if (err) {
+        res.redirect(`/profile/${req.params.username}`);
+        return;
+      }
+
+      User
+        .findOne({ username: req.session.currentUser.username })
+        .exec((err, currentUser) => {
+          const followingIndex = currentUser.following.indexOf(follow._id);
+          if (followingIndex > -1) {
+            currentUser.following.splice(followingIndex, 1);
+          } else {
+            currentUser.following.push(follow._id);
+            console.log('this should not be -1:', followingIndex, ',because', currentUser.following[0], 'is equal to', follow._id);
+          }
+
+          currentUser.save((err) => {
+            req.session.currentUser = currentUser;
+            res.redirect(`/profile/${req.params.username}`);
           });
         });
     });
