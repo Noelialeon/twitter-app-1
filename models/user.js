@@ -8,6 +8,7 @@ const userSchema = new Schema({
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  usePushEach: true,
 });
 
 const User = mongoose.model('User', userSchema);

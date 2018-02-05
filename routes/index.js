@@ -61,20 +61,42 @@ router.post('/profile/:username/follow', authMiddleware('/login'), (req, res, ne
       User
         .findOne({ username: req.session.currentUser.username })
         .exec((err, currentUser) => {
-          const followingIndex = currentUser.following.indexOf(follow._id);
-          if (followingIndex > -1) {
-            currentUser.following.splice(followingIndex, 1);
+          if (err) {
+            next(err);
           } else {
-            currentUser.following.push(follow._id);
+            const followingIndex = currentUser.following.indexOf(follow._id);
+            if (followingIndex > -1) {
+              currentUser.following.splice(followingIndex, 1);
+            } else {
+              currentUser.following.push(follow._id);
+            }
+            currentUser.save((err) => {
+              req.session.currentUser = currentUser;
+              res.redirect(`/profile/${req.params.username}`);
+            });
           }
-          console.log('this should not be -1:', followingIndex, ',because', currentUser.following[0], 'is equal to', follow._id);
-
-          currentUser.save((err) => {
-            req.session.currentUser = currentUser;
-            res.redirect(`/profile/${req.params.username}`);
-          });
         });
     });
 });
+
+router.get('/profile/:username/timeline', (req, res, next) => {
+  const { currentUser } = req.session;
+  currentUser.following.push(currentUser._id);
+  console.log(currentUser);
+  Tweet.find({ user_id: { $in: currentUser.following } })
+    .sort({ created_at: -1 })
+    .exec((err, timeline) => {
+      if (err) {
+        next(err);
+      } else {
+        res.render('timeline', {
+          username: currentUser.username,
+          timeline,
+          moment,
+        });
+      }
+    });
+});
+
 
 module.exports = router;
